@@ -1,0 +1,79 @@
+创建
+    empty
+    constant
+    zeros
+    ones
+    linespace
+    fromarray
+    fromvector
+    fromfile
+    fromtxt
+    fromimage
+
+通用运算
+    逐元素运算
+        四则运算
+            add_constant
+            minus_constant
+            times_constant
+            div_constant
+        三角函数
+            sin, cos, tan; arcsin, arccos, arctan
+        指数运算
+            exp_constant
+        幂运算
+            pow_constant
+        
+    相同形状运算
+        四则运算
+            add_same_shape
+            minus_same_shape
+            times_same_shape
+            div_same_shape
+        指数运算
+            exp_same_shape
+        幂运算
+            pow_same_shape
+
+    其它运算
+        count_nonzero
+        sum
+
+    索引
+        ndarray of shape (N,2)
+        对每一维都索引
+
+    赋值运算
+        同形状赋值
+        按索引赋值
+
+    广播运算
+        四则运算
+            add_broadcast
+            minus_broadcast
+            times_brodcast
+            div_broadcast
+        矩阵运算
+            matmul_broadcast
+
+
+    形状变换
+        reshape
+        flatten
+        concat
+        stack
+        permute
+
+向量运算
+    vec::dot #点积
+    vec::cross #叉积
+    vec::norm #归一化
+
+矩阵运算
+    mat::matmul #矩阵乘法
+    mat::invers #求逆矩阵
+    mat::trace #求迹
+
+图像运算
+    im::norm #归一化
+    im::standard #标准化
