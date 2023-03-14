@@ -12,3 +12,10 @@ target_link_libraries(test_main PUBLIC
     Threads::Threads
         fmt
 )
+
+add_executable(visualize test/visualization.cpp)
+target_include_directories(visualize PUBLIC include)
+target_link_libraries(visualize PUBLIC
+        fmt
+        png
+        )

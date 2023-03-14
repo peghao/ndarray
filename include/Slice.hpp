@@ -4,7 +4,6 @@
 
 #include <algorithm>
 
-
 namespace nd{
 //    template <typename T>
 //    std::shared_ptr<nd::NdArray<T>> slice(std::shared_ptr<nd::NdArray<T>> X, std::initializer_list<nd::shape_t> slice_list){
@@ -56,14 +55,19 @@ namespace nd{
     }
 
     template <typename T>
-    T slice_item(std::shared_ptr<nd::NdArray<T>> X, std::initializer_list<nd::shape_t> slice_list){
-        if(slice_list.size() !=2 || X->dim != 2){
-            throw std::runtime_error(fmt::format("Only 2d array is support now, but got input array dim {}, and slice dim {}", X->dim, slice_list.size()));
+    T& slice_item(std::shared_ptr<nd::NdArray<T>> X, std::initializer_list<nd::shape_t> slice_list){
+        if(slice_list.size() != X->dim){
+            throw std::runtime_error(fmt::format("Error in {}: index(which is dim {}) is not match input dim(which is {})", __func__, slice_list.size(), X->dim));
         }
-        auto slice_vec = slice2vector(slice_list);
-        shape_t i=slice_vec[0], j=slice_vec[1];
-        shape_t X_width = X->shape[1];
-        return X->data[i*X_width + j];
+        auto X_size_list = get_size_list(std::vector<shape_t>(X->shape, X->shape+X->dim));
+        auto X_index = initial_list2vector(slice_list);
+
+        shape_t X_offset = 0;
+
+        for(size_t i=0; i<X->dim; ++i){
+            X_offset += X_index[i]*X_size_list[i];
+        }
+        return X->data[X_offset];
     }
 
     template <typename T>

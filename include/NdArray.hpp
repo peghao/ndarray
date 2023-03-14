@@ -3,6 +3,7 @@
 #include <iostream>
 #include <initializer_list>
 #include <vector>
+#include <algorithm>
 
 #include "fmt/format.h"
 
@@ -13,46 +14,46 @@ typedef uint32_t dim_t;
 typedef uint64_t shape_t;
 #define SLICE_END UINT64_MAX
 
-template <typename T>
-class NdArray{
+    template <typename T>
+    class NdArray{
 
-public:
-    NdArray() = default;
+    public:
+        NdArray() = default;
 
-    dim_t dim{0};
-    shape_t *shape{nullptr};
-    T *data;
+        dim_t dim{0};
+        shape_t *shape{nullptr};
+        T *data;
 
-public:
+    public:
 
-    NdArray(std::initializer_list<T> data){
-        dim = 1;
-        shape = new shape_t(data.size());
-        this->data = new T[data.size()];
+        NdArray(std::initializer_list<T> data){
+            dim = 1;
+            shape = new shape_t(data.size());
+            this->data = new T[data.size()];
 
-        shape_t i=0;
-        for(auto &x: data){
-            this->data[i++] = x;
+            shape_t i=0;
+            for(auto &x: data){
+                this->data[i++] = x;
+            }
         }
-    }
 
-    ~NdArray(){
-        delete[] shape;
-        delete[] data;
-    }
+        ~NdArray(){
+            delete[] shape;
+            delete[] data;
+        }
 
-    dim_t get_dim(){return this->dim;}
+        dim_t get_dim(){return this->dim;}
 
-    std::shared_ptr<NdArray<shape_t>> get_shape(){
-        auto X = std::make_shared<NdArray<shape_t>>();
-        X->dim = 1;
-        X->shape = new shape_t(dim);
-        X->data = new shape_t[dim];
-        for(dim_t i=0; i<X->dim; ++i)
-            X->data[i] = shape[i];
-        return X;
+        std::shared_ptr<NdArray<shape_t>> get_shape(){
+            auto X = std::make_shared<NdArray<shape_t>>();
+            X->dim = 1;
+            X->shape = new shape_t(dim);
+            X->data = new shape_t[dim];
+            for(dim_t i=0; i<dim; ++i)
+                X->data[i] = shape[i];
+            return X;
+        };
     };
-};
 
     shape_t get_size(std::initializer_list<nd::shape_t> shape){
         shape_t size=1;
@@ -92,9 +93,30 @@ public:
         return X;
     }
 
-}
+    std::vector<shape_t> get_size_list(std::vector<shape_t> shape){
 
+        std::vector<shape_t> size_list(1,1);
+        for(int i=shape.size()-1; i>=0; --i){
+            size_list.push_back(size_list.back() * shape[i]);
+        }
+
+        size_list.pop_back();
+        std::reverse(size_list.begin(), size_list.end());
+        // size_list.pop_back(); // remove "1"
+        return size_list;
+    }
+
+    template <typename T>
+    std::vector<T> initial_list2vector(std::initializer_list<T> X){
+        std::vector<T> Y;
+        for(auto &x: X){
+            Y.push_back(x);
+        }
+        return Y;
+    }
+}
 
 #include "Creation.hpp"
 #include "Slice.hpp"
 #include "Broadcast.hpp"
+#include "Transform.hpp"
